@@ -1,0 +1,9 @@
+.imageupload {
+    width: 60%;
+    background-color: white;
+    border: 1px solid black;
+}
+
+.imageupload__progress {
+    width: 100%;
+}

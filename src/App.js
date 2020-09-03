@@ -4,6 +4,8 @@ import './App.css';
 import Post from './components/Post';
 import PostData from './constants/PostData';
 import { db, auth } from './firebase';
+import ImageUpload from './components/ImageUpload'
+import InstagramEmbed from 'react-instagram-embed'
 
 const App = () => {
   const [posts, setPosts] = useState([]);
@@ -41,7 +43,7 @@ const App = () => {
 
   // anytime the app is rerendered =, useEffect() method runs
   useEffect(() => {
-    db.collection('posts').onSnapshot((snapshot) => {
+    db.collection('posts').orderBy('timestamp','desc').onSnapshot((snapshot) => {
       setPosts(
         snapshot.docs.map((doc) => ({
           id: doc.id,
@@ -64,7 +66,7 @@ const App = () => {
     setPassword(e.currentTarget.value);
   };
 
-  function handleSubmit(e) {
+  const signUp = (e) => {
     e.preventDefault();
     auth
       .createUserWithEmailAndPassword(email, password)
@@ -76,32 +78,56 @@ const App = () => {
       .catch((error) => alert(error.message));
   }
 
+  const signIn = (e) => {
+    e.preventDefault()
+    auth.signInWithEmailAndPassword(email,password)
+    .catch((error) => alert(error.message))
+  }
+
   return (
-    <div className="app">
-      <div className="app__header p-2">
-        <img
-          className="app__headerImage"
-          src="https://www.instagram.com/static/images/web/mobile_nav_type_logo.png/735145cfe0a4.png"
-          alt=""
-        />
-      </div>
-      <div>
+    <div className="app m-1">
+      
+      <div className="d-flex bg-white">
+        <div className="app__header p-2 mr-auto">
+          <img
+            className="app__headerImage"
+            src="https://www.instagram.com/static/images/web/mobile_nav_type_logo.png/735145cfe0a4.png"
+            alt=""
+          />
+        </div>
+
+        <div className="ml-auto">
         {user ? (
-          <div
-            className="btn m-1"
-            onClick={() => auth.signOut()}
-          >
-            Log Out
-          </div>
-        ) : (
-          <div
-            className="btn m-1"
-            data-toggle="modal"
-            data-target="#signup"
-          >
-            Sign Up
-          </div>
-        )}
+            <div
+              className="btn m-1"
+              onClick={() => auth.signOut()}
+            >
+              Log Out
+            </div>
+          ) : (
+            <div>
+              <button
+                className="btn m-1"
+                data-toggle="modal"
+                data-target="#signin"
+              >
+                Sign In
+              </button>
+              <button
+                className="btn m-1"
+                data-toggle="modal"
+                data-target="#signup"
+              >
+                Sign Up
+              </button>
+            </div>
+          )}
+        </div>
+      </div>
+      {user?.displayName ? <ImageUpload username={user.displayName}/>: <h3>Sorry You Need to Login to Upload Images</h3>}
+      {/* the ImageUpload element should render only if the user is logged in */}
+      {/* ? used above is called optionals. the condition will be evaluated only if user exists */}
+      <div>
         <div className="modal fade text-center" id="signup">
           <div className="modal-dialog modal-dialog-centered">
             <div className="modal-content">
@@ -138,7 +164,10 @@ const App = () => {
                       onChange={handlesetPassword}
                     />
 
-                    <button type="submit" onClick={handleSubmit}>
+                    <button 
+                      type="submit" 
+                        onClick={signUp}
+                        data-dismiss="modal">
                       Submit
                     </button>
                   </form>
@@ -153,9 +182,76 @@ const App = () => {
             </div>
           </div>
         </div>
+
+        <div className="modal fade text-center" id="signin">
+          <div className="modal-dialog modal-dialog-centered">
+            <div className="modal-content">
+              <div className="modal-header">
+                <h5 className="modal-title w-100 text-center">
+                  Please provide credentials
+                </h5>
+              </div>
+
+              <div className="modal-body">
+                <div className="container">
+                  <form>
+                    <input
+                      type="text"
+                      // value={email}      //we don't want the input field prepopulated with the previous email
+                      placeholder="Enter Email"
+                      className="form-control m-1"
+                      onChange={handlesetEmail}
+                    />
+
+                    <input
+                      type="text"
+                      // value={password}
+                      placeholder="Enter Password"
+                      className="form-control m-1"
+                      onChange={handlesetPassword}
+                    />
+
+                    <button 
+                      type="submit" 
+                      onClick={signIn}
+                      data-dismiss="modal">
+                      Submit
+                    </button>
+                  </form>
+                </div>
+              </div>
+
+              <div className="modal-header text-center">
+                <button className="btn-danger fluid" data-dismiss="modal">
+                  Close
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
       </div>
-      This is an instagram clone
-      {posts_elements}
+
+      <div className="d-flex">
+        <div classNam="mr-2">
+          {posts_elements}
+        </div>
+
+        <InstagramEmbed
+          className="ml-1"
+          url='https://instagr.am/p/Zw9o4/'
+          maxWidth={320}
+          hideCaption={false}
+          containerTagName='div'
+          protocol=''
+          injectScript
+          onLoading={() => {}}
+          onSuccess={() => {}}
+          onAfterRender={() => {}}
+          onFailure={() => {}}
+        />
+
+      </div>
     </div>
   );
 };
