@@ -1,8 +1,7 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { useState, useEffect } from 'react';
 import './App.css';
 import Post from './components/Post';
-import PostData from './constants/PostData';
 import { db, auth } from './firebase';
 import ImageUpload from './components/ImageUpload'
 import InstagramEmbed from 'react-instagram-embed'
@@ -242,7 +241,7 @@ const App = () => {
         <div>
           <InstagramEmbed
             className="instagramembed"
-            url='https://instagr.am/p/Zw9o4/y'
+            url='https://instagr.am/p/Zw9o4/'
             maxWidth={320}
             hideCaption={false}
             containerTagName='div'

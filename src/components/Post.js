@@ -51,7 +51,7 @@ const Post = (props) => {
         </div>
 
       {/* {image} */}
-      <img className="post__image" src={props.imageUrl} alt="image not found"/>
+      <img className="post__image" src={props.imageUrl} alt=""/>
 
       {/* {username+caption} */}
       <h4 className="post__text p-2"><strong>{props.username}:</strong> {props.caption}</h4>
