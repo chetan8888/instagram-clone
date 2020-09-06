@@ -12,11 +12,13 @@ const App = () => {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState(null);   //"user" represents the user that is currently signed in
 
   const posts_elements = posts.map(({ id, post }) => (
     <Post
       key={id} //if we don't provide the keys attribute, all the posts will be rerendered every time a post is changed, added. Having the key attribute allows react to identify which particular component needs to be rerendered.
+      postId={id}
+      user={user}
       username={post.username}
       caption={post.caption}
       imageUrl={post.imageUrl}
@@ -174,7 +176,7 @@ const App = () => {
                 </div>
               </div>
 
-              <div className="modal-header text-center">
+              <div className="modal-footer text-center">
                 <button className="btn-danger fluid" data-dismiss="modal">
                   Close
                 </button>
@@ -221,7 +223,7 @@ const App = () => {
                 </div>
               </div>
 
-              <div className="modal-header text-center">
+              <div className="modal-footer text-center">
                 <button className="btn-danger fluid" data-dismiss="modal">
                   Close
                 </button>
@@ -233,23 +235,24 @@ const App = () => {
       </div>
 
       <div className="d-flex">
-        <div classNam="mr-2">
+        <div className="mr-3 posts_elements">
           {posts_elements}
         </div>
 
-        <InstagramEmbed
-          className="ml-1"
-          url='https://instagr.am/p/Zw9o4/'
-          maxWidth={320}
-          hideCaption={false}
-          containerTagName='div'
-          protocol=''
-          injectScript
-          onLoading={() => {}}
-          onSuccess={() => {}}
-          onAfterRender={() => {}}
-          onFailure={() => {}}
-        />
+        <div>
+          <InstagramEmbed
+            className="instagramembed"
+            url='https://instagr.am/p/Zw9o4/y'
+            maxWidth={320}
+            hideCaption={false}
+            containerTagName='div'
+            protocol=''
+            injectScript
+            onLoading={() => {}}
+            onAfterRender={() => {}}
+            onFailure={() => {}}
+          />
+        </div>
 
       </div>
     </div>
